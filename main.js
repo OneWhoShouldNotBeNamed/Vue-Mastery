@@ -1,5 +1,11 @@
 Vue.component('product',
 {
+    props:{
+        premium:{
+            type:Boolean,
+            required:true
+            }
+        },
     template:`
     <div class="product">
         <div class="product-image">
@@ -10,6 +16,8 @@ Vue.component('product',
             <p>{{description}}</p>
             <p v-if="onSale">Item On Sale!!!! Grab Fast!!!</p>
             <p v-else>Regular Sale</p>
+            <p>User is permium:{{premium}}</p>
+            <p>Shipping :{{shipping}}</p>
             <p v-if="inStock">In Stock</p>
             <p v-else :class ="{outOfStock : !inStock}">Out of Stock</p>
             <a :href="link" target="_blank">View More</a>
@@ -104,11 +112,25 @@ computed:
           return this.brand + ' ' + this.product + ' are on sale!'
         } 
           return  this.brand + ' ' + this.product + ' are not on sale'
+      },
+      shipping()
+      {
+          if(this.premium)
+          {
+              return "free"
+          }
+          else
+          {
+              return 2.99
+          }
       }
+
 
 }
 })
 
 var app=new Vue({
-        el:'#app'
+        el:'#app',
+        data:
+        {premium:true}
 })
