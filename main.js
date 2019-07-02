@@ -51,13 +51,12 @@ Vue.component('product',
                   <p>{{ review.name }}</p>
                   <p>Rating:{{ review.rating }}</p>
                   <p>{{ review.review }}</p>
+                  <p>{{ review.recommend }}</p>
                 </li>
             </ul>
         </div>
-            <product-review @review-submitted="addReview"></product-review>
-          
+            <product-review @review-submitted="addReview"></product-review>          
        </div>
-   
     `,
     data(){
    return {
@@ -176,7 +175,15 @@ Vue.component('product-review', {
         <option>1</option>
       </select>
     </p>
-        
+    <p>Would you recommend this product?</p>
+    <label>
+      Yes
+      <input type="radio" value="Yes" v-model="recommend"/>
+    </label>
+    <label>
+      No
+      <input type="radio" value="No" v-model="recommend"/>
+    </label>
     <p>
       <input type="submit" value="Submit">  
     </p>    
@@ -188,6 +195,7 @@ Vue.component('product-review', {
               name: null,
               review: null,
               rating: null,
+              recommend:null,
               errors:[]
             }
           },
@@ -195,22 +203,26 @@ Vue.component('product-review', {
         {
             onSubmit() {
                 this.errors=[]
-                if(this.name && this.review && this.rating ) {
+                if(this.name && this.review && this.rating &&this.recommend ) {
                  let productReview = {
                   name: this.name,
                   review: this.review,
-                  rating: this.rating
+                  rating: this.rating,
+                  recommend:this.recommend
+
                 }
                 this.$emit('review-submitted',productReview)
                 this.name = null
                 this.review = null
                 this.rating = null
+                this.recommend=null
             }
             else
             {
             if(!this.name) this.errors.push("Name required.")
             if(!this.review) this.errors.push("Review required.")
             if(!this.rating) this.errors.push("Rating required.")
+            if(!this.recommend) this.errors.push("Recommendation required.")
         }
         }
         }
