@@ -37,9 +37,7 @@ Vue.component('product',
             @mouseover="updateProduct(index)"
             >
        </div> 
-            <div class="cart">
-                <p>Cart({{cart}})</p>
-            </div>
+            
             <button v-on:click="addToCart"
             :disabled="!inStock"
             :class="{disabledButton:!inStock}">Add to Cart</button>
@@ -59,7 +57,6 @@ Vue.component('product',
     onSale:true,    
     details:["80% Cotton","20% polyster","Gender-neutral"],
     sizes:["5","6","7"],
-    cart:0,
     selectedVariant:0,
     variants:
     [
@@ -73,7 +70,7 @@ Vue.component('product',
             variantId:2235,
             variantColor:"blue",
             variantImage:"./vmSocks-blue.jpg",
-            variantQuantity:0
+            variantQuantity:10
         }
     ]
    
@@ -82,11 +79,11 @@ Vue.component('product',
 methods:
 {
     addToCart(){
-        this.cart += 1
-    },
+        this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId)   
+     },
     RemoveCart(){
-        this.cart-=1
-    },
+        this.$emit('remove-from-cart', this.variants[this.selectedVariant].variantId)   
+     },
     updateProduct(index)
     {
         this.selectedVariant=index
@@ -132,5 +129,23 @@ computed:
 var app=new Vue({
         el:'#app',
         data:
-        {premium:true}
+        {
+            premium:true,
+            cart:[]
+        },
+        methods:
+        {
+            updateCart(id)
+            {
+                this.cart.push(id)
+            },
+            removeItem(id) {
+                for(var i = this.cart.length - 1; i >= 0; i--)
+                 {
+                  if (this.cart[i] === id) {
+                     this.cart.splice(i, 1);
+              }
+            }
+        }
+        }
 })
